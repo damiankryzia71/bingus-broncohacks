@@ -21,8 +21,9 @@ cd bingus-broncohacks/frontend/
 npm i
 ```
 
-cd bingus-broncohacks/frontend/
-npm i
-```
-
 ### Backend Setup
+After installing PostgreSQL, open pgAdmin and connect to the PostgreSQL 17 server (localhost).
+Run:
+```sql
+CREATE DATABASE bingus;
+```
