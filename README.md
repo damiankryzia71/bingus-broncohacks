@@ -27,3 +27,9 @@ Run:
 ```sql
 CREATE DATABASE bingus;
 ```
+Create and activate a Python virtual environment for the project:
+```bash
+cd bingus-broncohacks/backend/
+python -m venv .
+./Scripts/activate.ps1
+```
