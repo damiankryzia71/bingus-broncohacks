@@ -9,11 +9,11 @@
 
 [PostgreSQL](https://sbp.enterprisedb.com/getfile.jsp?fileid=1259505)
 
-### Project Setup
+### Frontend Setup
 ```bash
 git clone https://github.com/damiankryzia71/bingus-broncohacks.git
 cd bingus-broncohacks/frontend/
 npm i
 ```
 
-### 3. Backend Setup
+### Backend Setup
