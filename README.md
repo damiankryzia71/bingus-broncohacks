@@ -44,7 +44,7 @@ pip install markdown
 pip install django-filter
 pip install psycopg
 ```
-Go to the `bingus/bingus/` directory and open `settings.py`. Inside the file, change the `DATABASE` part to your correct values:
+Go to the `bingus/bingus/` directory and open `settings.py`. Inside the file, change the `DATABASES` part to your correct values:
 ```py
 DATABASES = {
     "default": {
