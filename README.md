@@ -20,6 +20,10 @@ The frontend is already set up, you just need to npm install.
 cd bingus-broncohacks/frontend/
 npm i
 ```
+Run the dev server to see if everything worked:
+```bash
+npm run dev
+```
 
 ### Backend Setup
 After installing PostgreSQL, open pgAdmin and connect to the PostgreSQL 17 server (localhost).
@@ -39,7 +43,26 @@ pip install djangorestframework
 pip install markdown
 pip install django-filter
 pip install psycopg
-
-cd bingus/
+```
+Go to the `bingus/bingus/` directory and open `settings.py`. Inside the file, change the `DATABASE` part to your correct values:
+```py
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "bingus",
+        "USER": "postgres",
+        "PASSWORD": "12345",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
+    }
+}
+```
+Run migrations:
+```bash
+cd ../../
 python manage.py migrate
+```
+Run the dev server to see if everything worked:
+```bash
+python manage.py runserver
 ```
