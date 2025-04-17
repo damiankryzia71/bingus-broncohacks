@@ -9,9 +9,18 @@
 
 [PostgreSQL](https://sbp.enterprisedb.com/getfile.jsp?fileid=1259505)
 
-### Frontend Setup
+### Clone the repo
 ```bash
 git clone https://github.com/damiankryzia71/bingus-broncohacks.git
+```
+
+### Frontend Setup
+The frontend is already set up, you just need to npm install.
+```bash
+cd bingus-broncohacks/frontend/
+npm i
+```
+
 cd bingus-broncohacks/frontend/
 npm i
 ```
