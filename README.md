@@ -63,7 +63,9 @@ Run migrations:
 cd ../../
 python manage.py migrate
 ```
-Run the dev server and open `http://localhost:8000/app` to see if everything worked:
+Run the dev server:
 ```bash
 python manage.py runserver
 ```
+
+Finally, go to `localhost:5173` in your browser. If you see "API RESULT: Hello Bingus" then everything worked.
