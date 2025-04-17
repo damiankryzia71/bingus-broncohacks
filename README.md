@@ -62,7 +62,7 @@ Run migrations:
 cd ../../
 python manage.py migrate
 ```
-Run the dev server to see if everything worked:
+Run the dev server and open `http://localhost:8000/app` to see if everything worked:
 ```bash
 python manage.py runserver
 ```
