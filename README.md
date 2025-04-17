@@ -27,13 +27,13 @@ Run:
 ```sql
 CREATE DATABASE bingus;
 ```
-Create and activate a Python virtual environment for the project:
+Create and activate a Python virtual environment for the project, install packages:
 ```bash
 cd bingus-broncohacks/backend/
 python -m venv .
 ./Scripts/activate.ps1
-```
-Install Django:
-```bash
 python -m pip install Django
+pip install djangorestframework
+pip install markdown
+pip install django-filter
 ```
