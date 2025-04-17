@@ -30,10 +30,16 @@ CREATE DATABASE bingus;
 Create and activate a Python virtual environment for the project, install packages:
 ```bash
 cd bingus-broncohacks/backend/
+
 python -m venv .
 ./Scripts/activate.ps1
+
 python -m pip install Django
 pip install djangorestframework
 pip install markdown
 pip install django-filter
+pip install psycopg
+
+cd bingus/
+python manage.py migrate
 ```
