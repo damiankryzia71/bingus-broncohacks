@@ -1,3 +1,22 @@
+import { useState, useEffect } from "react";
+
 export default function Home() {
-    return <div>Home Page</div>;
+    const [text, setText] = useState<string>("");
+
+    useEffect(() => {
+        async function fetchData() {
+            const result = await fetch("http://localhost:8000/app");
+            const text = await result.text();
+            setText(text);
+        }
+
+        fetchData();
+    }, []);
+
+    return (
+        <div>
+            <h1>Home Page</h1>
+            <div>API RESULT: {text}</div>
+        </div>
+    );
 }
