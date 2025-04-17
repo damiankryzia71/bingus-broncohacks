@@ -43,6 +43,7 @@ pip install djangorestframework
 pip install markdown
 pip install django-filter
 pip install psycopg
+pip install django-cors-headers
 ```
 Go to the `bingus/bingus/` directory and open `settings.py`. Inside the file, change the `DATABASES` part to your correct values:
 ```py
