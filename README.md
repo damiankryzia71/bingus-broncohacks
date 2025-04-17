@@ -33,3 +33,7 @@ cd bingus-broncohacks/backend/
 python -m venv .
 ./Scripts/activate.ps1
 ```
+Install Django:
+```bash
+python -m pip install Django
+```
