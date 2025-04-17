@@ -7,6 +7,8 @@
 
 [Python 13.3.3](https://www.python.org/ftp/python/3.13.3/python-3.13.3-amd64.exe)
 
+[PostgreSQL](https://sbp.enterprisedb.com/getfile.jsp?fileid=1259505)
+
 ### Project Setup
 ```bash
 git clone https://github.com/damiankryzia71/bingus-broncohacks.git
