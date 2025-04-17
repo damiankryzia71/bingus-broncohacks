@@ -7,8 +7,8 @@
 
 ### Project Setup
 ```bash
-git clone 
-cd frontend/
+git clone https://github.com/damiankryzia71/bingus-broncohacks.git
+cd bingus-broncohacks/frontend/
 npm i
 ```
 
