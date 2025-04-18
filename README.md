@@ -15,11 +15,19 @@ git clone https://github.com/damiankryzia71/bingus-broncohacks.git
 ```
 
 ### Frontend Setup
-The frontend is already set up, you just need to npm install.
+First, npm install all the packages from `package.json`:
 ```bash
 cd bingus-broncohacks/frontend/
 npm i
 ```
+Install ShadCN UI just to be safe:
+```bash
+npm i -D @types/node
+npx shadcn@latest init
+```
+When prompted about colors, choose neutral.
+Then choose --force.
+
 Run the dev server to see if everything worked:
 ```bash
 npm run dev
