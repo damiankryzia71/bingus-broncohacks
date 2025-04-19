@@ -78,6 +78,7 @@ class Recommendations(models.Model):
     day = models.ForeignKey(Days, models.DO_NOTHING, blank=True, null=True)
     category = models.ForeignKey('RecommendationCategories', models.DO_NOTHING, blank=True, null=True)
     recommendation = models.TextField(blank=True, null=True)
+    title = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False

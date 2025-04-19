@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router'
 import { createRoot } from 'react-dom/client'
 
+import "./index.css";
+
 import Layout from './shared/Layout'
 import NotFound from './shared/NotFound'
 
