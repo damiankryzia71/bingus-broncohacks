@@ -93,29 +93,19 @@ export default function Daily() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
             <div className="w-full max-w-2xl space-y-6">
-                <h1 className="text-3xl font-bold text-center mb-4">Check-In Buddy</h1>
-
                 {userExists ?
                     (newDay && user && today ?
-                        <div className="bg-white shadow-md rounded-2xl p-6">
-                            <DailyForm user={user} day={today} onSuccess={onSuccessDailySubmit} />
-                        </div>
+                        <DailyForm user={user} day={today} onSuccess={onSuccessDailySubmit} />
                         :
-                        <div className="bg-white shadow-md rounded-2xl p-6">
-                            Display Recommendations, Daily Quote, Daily Score
-                        </div>
+                        <div>Display Recommendations, Daily Quote, Daily Score</div>
                     )
                     :
                     (
                         <div className="flex flex-col gap-10">
-                            <div className="bg-white shadow-md rounded-2xl p-6">
-                                <Greeting onGetStarted={() => { setGetStartedClicked(true) }} />
-                            </div>
+                            <Greeting onGetStarted={() => { setGetStartedClicked(true) }} />
                             <div>
                                 {getStartedClicked ?
-                                    <div className="bg-white shadow-md rounded-2xl p-6">
-                                        <NewUserForm onSuccess={onSuccessRegister} />
-                                    </div>
+                                    <NewUserForm onSuccess={onSuccessRegister} />
                                     :
                                     null
                                 }
