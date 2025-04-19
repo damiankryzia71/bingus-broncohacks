@@ -15,7 +15,6 @@ createRoot(document.getElementById('root')!).render(
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<Daily />} />
-        <Route path="/journal" element={<Journal />} />
         <Route path="/history" element={<History />} />
         <Route path="/*" element={<NotFound />} />
       </Route>
