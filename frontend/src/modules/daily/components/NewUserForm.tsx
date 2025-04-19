@@ -15,7 +15,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { postUsers } from "@/api/daily_api";
+import { postUsers } from "@/api/users_api";
 import { Users } from "@/interfaces/Users";
 
 const formSchema = z.object({

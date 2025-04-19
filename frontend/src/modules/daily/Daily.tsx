@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getUser } from "@/api/daily_api";
+import { getUser } from "@/api/users_api";
 import NewUserForm from "./components/NewUserForm";
 import Greeting from "./components/Greeting";
 import { Users } from "@/interfaces/Users";
