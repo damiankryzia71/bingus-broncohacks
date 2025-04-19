@@ -1,5 +1,8 @@
 import { Outlet } from "react-router"
+import Navbar from "./Navbar";
 
 export default function Layout() {
-    return <Outlet />;
+
+    const name = "sigma";
+    return <Navbar name = {name}/>;
 }
