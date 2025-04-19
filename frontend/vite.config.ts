@@ -13,11 +13,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api": {
-        target: "http://localhost:8000", // your Django dev server
-        changeOrigin: true,
-        secure: false,
-      },
+      
     },
   },
 });
