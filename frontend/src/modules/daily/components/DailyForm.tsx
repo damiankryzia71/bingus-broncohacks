@@ -32,6 +32,7 @@ import SvgNeutral from '@/svgs/3.svg?react'
 import SvgHappy from '@/svgs/4.svg?react';
 import SvgHappiest from '@/svgs/5.svg?react'
 import { postDays } from "@/api/days_api";
+import { Users } from "@/interfaces/Users";
 
 
 
@@ -83,7 +84,7 @@ const svgColors = {
     select: "#A7C7E7"
 };
 
-export default function DailyForm({ userId, dayId, onSuccess }: { userId: number, dayId: number, onSuccess: (resultInputs: WellnessInputs[], resultNote: WellnessNotes) => void }) {
+export default function DailyForm({ user, day, onSuccess }: { user: Users, day: Days, onSuccess: (resultInputs: WellnessInputs[], resultNote: WellnessNotes) => void }) {
     const [submitting, setSubmitting] = useState<boolean>(false);
 
     const [selectedSvg, setSelectedSvg] = useState({
@@ -106,33 +107,33 @@ export default function DailyForm({ userId, dayId, onSuccess }: { userId: number
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const mood: WellnessInputs = {
-            user: userId,
-            day: dayId,
+            user: user.id || 0,
+            day: day.id || 0,
             category: 1,
             score: Number(values.mood)
         };
         const energy: WellnessInputs = {
-            user: userId,
-            day: dayId,
+            user: user.id || 0,
+            day: day.id || 0,
             category: 2,
             score: Number(values.energy)
         };
         const socialBattery: WellnessInputs = {
-            user: userId,
-            day: dayId,
+            user: user.id || 0,
+            day: day.id || 0,
             category: 3,
             score: Number(values.socialBattery)
         };
         const apetite: WellnessInputs = {
-            user: userId,
-            day: dayId,
+            user: user.id || 0,
+            day: day.id || 0,
             category: 4,
             score: Number(values.apetite)
         };
 
         const note: WellnessNotes = {
-            user: userId,
-            day: dayId,
+            user: user.id || 0,
+            day: day.id || 0,
             note: values.note
         };
 

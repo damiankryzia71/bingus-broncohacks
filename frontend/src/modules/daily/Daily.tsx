@@ -88,7 +88,7 @@ export default function Daily() {
                     </div>
                     :
                     <div className="bg-white shadow-md rounded-2xl p-6">
-                        <DailyForm userId={user.id || 0} dayId={today.id || 0} onSuccess={onSuccessDailySubmit} />
+                        <DailyForm user={user} day={today} onSuccess={onSuccessDailySubmit} />
                     </div>
                     :
                     getStartedClicked ?
