@@ -16,4 +16,5 @@ router.register(r'recommendation-categories', RecommendationCategoriesViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path("api/wellness/", wellness_suggestions_api, name="wellness_suggestions_api"),
 ]
