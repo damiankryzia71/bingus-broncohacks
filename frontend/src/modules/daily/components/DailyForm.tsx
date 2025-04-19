@@ -40,6 +40,7 @@ import { DailyQuotes } from "@/interfaces/DailyQuotes";
 import { postDailyQuote } from "@/api/daily_quote_api";
 import { postWellnessScores } from "@/api/wellness_scores_api";
 
+import LoadingScreen from "@/shared/LoadingScreen";
 
 
 const svgs = [SvgSaddest, SvgSad, SvgNeutral, SvgHappy, SvgHappiest];
@@ -90,7 +91,7 @@ const svgColors = {
     select: "#A7C7E7"
 };
 
-export default function DailyForm({ user, day, onSuccess }: { user: Users, day: Days, onSuccess: (resultInputs: WellnessInputs[], resultNote: WellnessNotes, resultRecommendations: Recommendations[], resultQuote: DailyQuotes, resultScore: WellnessScores) => void }) {
+export default function DailyForm({ user, day, onSuccess }: { user: Users, day: Days, onSuccess: (resultRecommendations: Recommendations[], resultQuote: DailyQuotes, resultScore: WellnessScores) => void }) {
     const [submitting, setSubmitting] = useState<boolean>(false);
 
     const [selectedSvg, setSelectedSvg] = useState({
@@ -145,13 +146,11 @@ export default function DailyForm({ user, day, onSuccess }: { user: Users, day: 
 
         setSubmitting(true);
 
-        const moodResult = await postWellnessInputs(mood);
-        const energyResult = await postWellnessInputs(energy);
-        const socialBatteryResult = await postWellnessInputs(socialBattery);
-        const apetiteResult = await postWellnessInputs(apetite);
-        const resultInputs: WellnessInputs[] = [moodResult, energyResult, socialBatteryResult, apetiteResult];
-
-        const resultNote = await postWellnessNotes(note);
+        await postWellnessInputs(mood);
+        await postWellnessInputs(energy);
+        await postWellnessInputs(socialBattery);
+        await postWellnessInputs(apetite);
+        await postWellnessNotes(note);
 
         // pass data to gpt
         const gptInput = {
@@ -232,10 +231,10 @@ export default function DailyForm({ user, day, onSuccess }: { user: Users, day: 
         const resultScore: WellnessScores = await postWellnessScores(gptDailyScore);
             
         setSubmitting(false);
-        onSuccess(resultInputs, resultNote, resultRecommendations, resultQuote, resultScore);
+        onSuccess(resultRecommendations, resultQuote, resultScore);
     }
 
-    return (
+    return submitting ? <div><LoadingScreen /></div> : (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
                 <FormField

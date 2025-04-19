@@ -4,13 +4,14 @@ import NewUserForm from "./components/NewUserForm";
 import Greeting from "./components/Greeting";
 import { Users } from "@/interfaces/Users";
 import DailyForm from "./components/DailyForm";
-import { WellnessInputs } from "@/interfaces/WellnessInputs";
-import { WellnessNotes } from "@/interfaces/WellnessNotes";
 import { Days } from "@/interfaces/Days";
 import { getDays, postDays } from "@/api/days_api";
 import { Recommendations } from "@/interfaces/Recommendations";
 import { DailyQuotes } from "@/interfaces/DailyQuotes";
 import { WellnessScores } from "@/interfaces/WellnessScores";
+import { getRecommendations } from "@/api/recommendations_api";
+import { getDailyQuotes } from "@/api/daily_quote_api";
+import { getDailyScores } from "@/api/wellness_scores_api";
 
 const recommendationCategories = {
     "1": "Active Rest",
@@ -26,44 +27,52 @@ export default function Daily() {
     const [user, setUser] = useState<Users>();
     const [newDay, setNewDay] = useState<boolean>();
     const [today, setToday] = useState<Days>();
-    const [wellnessInputs, setWellnessInputs] = useState<WellnessInputs[]>([]);
-    const [wellnessNote, setWellnessNote] = useState<WellnessNotes>();
     const [recommendations, setRecommendations] = useState<Recommendations[]>();
     const [dailyScore, setDailyScore] = useState<WellnessScores>();
     const [dailyQuote, setDailyQuote] = useState<DailyQuotes>();
 
     useEffect(() => {
         async function fetchData() {
-            // const result = await getUser();
-            // const days = await getDays();
+            const user = await getUser();
 
-            // if (result?.id) {
-            //     console.log(result);
-            //     setUserExists(true);
-            //     setUser(result);
-            // }
-            // else setUserExists(false);
+            const todayDate = new Date();
+            const today: Days = {
+                date_field: `${todayDate.getFullYear()}-${(todayDate.getMonth() + 1).toString().length === 1 ? "0" + (todayDate.getMonth() + 1) : todayDate.getMonth() + 1}-${todayDate.getDate()}`
+            };
 
-            // const today = new Date();
-            // const todayDb = days.find(d => {
-            //     const date = new Date(d.date_field);
-            //     return (date.getFullYear() == today.getFullYear()) && (date.getMonth() + 1 == today.getMonth()) && (date.getDate() + 1 == today.getDate());
-            // });
+            if (user) {
+                setUser(user);
+                setUserExists(true);
 
-            // if (todayDb) {
-            //     setNewDay(true);
-            //     setToday(todayDb);
+                const days = await getDays();
+                const todayDb = days.find((d: Days) => (d.date_field == today.date_field));
 
-            // }
-            // else {
-            //     setNewDay(false);
-            //     const today = new Date();
-            //     const day: Days = {
-            //         date_field: `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`
-            //     };
-            //     const resultDays = await postDays(day);
-            //     setToday(resultDays);
-            // }
+                if (todayDb) {
+                    setToday(todayDb);
+
+                    const recommendationsResult = await getRecommendations();
+                    setRecommendations(recommendationsResult.filter((r: Recommendations) => r.user === user.id && r.day === today.id));
+
+                    const dailyQuoteResult = await getDailyQuotes();
+                    setDailyQuote(dailyQuoteResult.find((q: DailyQuotes) => (q.user === user.id && q.day === today.id)));
+
+                    const dailyScoreResult = await getDailyScores();
+                    setDailyScore(dailyScoreResult.find((s: WellnessScores) => (s.user === user.id && s.day === today.id)));
+
+                    if (recommendationsResult.length > 0) setNewDay(false); else setNewDay(true);
+                }
+                else {
+                    setNewDay(true);
+                    const result: Days = await postDays(today);
+                    setToday(result);
+                }
+            }
+            else {
+                setUserExists(false);
+                setNewDay(true);
+                const result: Days = await postDays(today);
+                setToday(result);
+            }
         }
 
         fetchData();
@@ -74,13 +83,11 @@ export default function Daily() {
         setUser(user);
     }
 
-    function onSuccessDailySubmit(resultInputs: WellnessInputs[], resultNote: WellnessNotes, resultRecommendations: Recommendations[], resultQuote: DailyQuotes, resultScore: WellnessScores) {
-        setWellnessInputs(resultInputs);
-        setWellnessNote(resultNote);
+    function onSuccessDailySubmit(resultRecommendations: Recommendations[], resultQuote: DailyQuotes, resultScore: WellnessScores) {
         setRecommendations(resultRecommendations);
         setDailyQuote(resultQuote);
         setDailyScore(resultScore);
-        setNewDay(true);
+        setNewDay(false);
     }
 
     return (
@@ -88,30 +95,33 @@ export default function Daily() {
             <div className="w-full max-w-2xl space-y-6">
                 <h1 className="text-3xl font-bold text-center mb-4">Check-In Buddy</h1>
 
-                <h2>Today: {today?.date_field}</h2>
-
-                {!userExists &&
-                    <div className="bg-white shadow-md rounded-2xl p-6">
-                        <Greeting onGetStarted={() => setGetStartedClicked(true)} />
-                    </div>
-                }
-
-                {(user && today) ?
-                    newDay ? 
-                    <div className="bg-white shadow-md rounded-2xl p-6">
-                        New Day
-                    </div>
-                    :
-                    <div className="bg-white shadow-md rounded-2xl p-6">
-                        <DailyForm user={user} day={today} onSuccess={onSuccessDailySubmit} />
-                    </div>
-                    :
-                    getStartedClicked ?
+                {userExists ?
+                    (newDay && user && today ?
                         <div className="bg-white shadow-md rounded-2xl p-6">
-                            <NewUserForm onSuccess={onSuccessRegister} />
+                            <DailyForm user={user} day={today} onSuccess={onSuccessDailySubmit} />
                         </div>
                         :
-                        null
+                        <div className="bg-white shadow-md rounded-2xl p-6">
+                            Display Recommendations, Daily Quote, Daily Score
+                        </div>
+                    )
+                    :
+                    (
+                        <div className="flex flex-col gap-10">
+                            <div className="bg-white shadow-md rounded-2xl p-6">
+                                <Greeting onGetStarted={() => { setGetStartedClicked(true) }} />
+                            </div>
+                            <div>
+                                {getStartedClicked ?
+                                    <div className="bg-white shadow-md rounded-2xl p-6">
+                                        <NewUserForm onSuccess={onSuccessRegister} />
+                                    </div>
+                                    :
+                                    null
+                                }
+                            </div>
+                        </div>
+                    )
                 }
             </div>
         </div>
