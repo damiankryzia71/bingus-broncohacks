@@ -9,6 +9,8 @@ import { WellnessNotes } from "@/interfaces/WellnessNotes";
 import { Days } from "@/interfaces/Days";
 import { getDays, postDays } from "@/api/days_api";
 import { Recommendations } from "@/interfaces/Recommendations";
+import { DailyQuotes } from "@/interfaces/DailyQuotes";
+import { WellnessScores } from "@/interfaces/WellnessScores";
 
 const recommendationCategories = {
     "1": "Active Rest",
@@ -27,40 +29,41 @@ export default function Daily() {
     const [wellnessInputs, setWellnessInputs] = useState<WellnessInputs[]>([]);
     const [wellnessNote, setWellnessNote] = useState<WellnessNotes>();
     const [recommendations, setRecommendations] = useState<Recommendations[]>();
+    const [dailyScore, setDailyScore] = useState<WellnessScores>();
+    const [dailyQuote, setDailyQuote] = useState<DailyQuotes>();
 
     useEffect(() => {
         async function fetchData() {
-            const result = await getUser();
-            const days = await getDays();
+            // const result = await getUser();
+            // const days = await getDays();
 
-            if (result?.id) {
-                console.log(result);
-                setUserExists(true);
-                setUser(result);
-            }
-            else setUserExists(false);
+            // if (result?.id) {
+            //     console.log(result);
+            //     setUserExists(true);
+            //     setUser(result);
+            // }
+            // else setUserExists(false);
 
-            const today = new Date();
-            const todayDb = days.find(d => {
-                const date = new Date(d.date_field);
-                console.log(date.getFullYear(), date.getMonth() + 1, date.getDate() + 1);
-                console.log(today.getFullYear(), today.getMonth(), today.getDate());
-                return (date.getFullYear() == today.getFullYear()) && (date.getMonth() + 1 == today.getMonth()) && (date.getDate() + 1 == today.getDate());
-            });
+            // const today = new Date();
+            // const todayDb = days.find(d => {
+            //     const date = new Date(d.date_field);
+            //     return (date.getFullYear() == today.getFullYear()) && (date.getMonth() + 1 == today.getMonth()) && (date.getDate() + 1 == today.getDate());
+            // });
 
-            if (todayDb) {
-                setNewDay(true);
-                setToday(todayDb);
-            }
-            else {
-                setNewDay(false);
-                const today = new Date();
-                const day: Days = {
-                    date_field: `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`
-                };
-                const resultDays = await postDays(day);
-                setToday(resultDays);
-            }
+            // if (todayDb) {
+            //     setNewDay(true);
+            //     setToday(todayDb);
+
+            // }
+            // else {
+            //     setNewDay(false);
+            //     const today = new Date();
+            //     const day: Days = {
+            //         date_field: `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`
+            //     };
+            //     const resultDays = await postDays(day);
+            //     setToday(resultDays);
+            // }
         }
 
         fetchData();
@@ -71,14 +74,13 @@ export default function Daily() {
         setUser(user);
     }
 
-    function onSuccessDailySubmit(resultInputs: WellnessInputs[], resultNote: WellnessNotes, resultRecommendations: Recommendations[]) {
-        console.log("RESULT INPUTS FRONTEND", resultInputs);
+    function onSuccessDailySubmit(resultInputs: WellnessInputs[], resultNote: WellnessNotes, resultRecommendations: Recommendations[], resultQuote: DailyQuotes, resultScore: WellnessScores) {
         setWellnessInputs(resultInputs);
         setWellnessNote(resultNote);
         setRecommendations(resultRecommendations);
+        setDailyQuote(resultQuote);
+        setDailyScore(resultScore);
         setNewDay(true);
-
-        console.log("GPT RECS", resultRecommendations);
     }
 
     return (

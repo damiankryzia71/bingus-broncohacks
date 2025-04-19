@@ -35,6 +35,10 @@ import SvgHappiest from '@/svgs/5.svg?react'
 import { Users } from "@/interfaces/Users";
 import { Recommendations } from "@/interfaces/Recommendations";
 import { postRecommendationArray } from "@/api/recommendations_api";
+import { WellnessScores } from "@/interfaces/WellnessScores";
+import { DailyQuotes } from "@/interfaces/DailyQuotes";
+import { postDailyQuote } from "@/api/daily_quote_api";
+import { postWellnessScores } from "@/api/wellness_scores_api";
 
 
 
@@ -86,7 +90,7 @@ const svgColors = {
     select: "#A7C7E7"
 };
 
-export default function DailyForm({ user, day, onSuccess }: { user: Users, day: Days, onSuccess: (resultInputs: WellnessInputs[], resultNote: WellnessNotes, resultRecommendations: Recommendations[]) => void }) {
+export default function DailyForm({ user, day, onSuccess }: { user: Users, day: Days, onSuccess: (resultInputs: WellnessInputs[], resultNote: WellnessNotes, resultRecommendations: Recommendations[], resultQuote: DailyQuotes, resultScore: WellnessScores) => void }) {
     const [submitting, setSubmitting] = useState<boolean>(false);
 
     const [selectedSvg, setSelectedSvg] = useState({
@@ -149,8 +153,6 @@ export default function DailyForm({ user, day, onSuccess }: { user: Users, day: 
 
         const resultNote = await postWellnessNotes(note);
 
-        setSubmitting(false);
-
         // pass data to gpt
         const gptInput = {
             user_profile: {
@@ -200,19 +202,37 @@ export default function DailyForm({ user, day, onSuccess }: { user: Users, day: 
 
         const gptResultData = await gptResult.json();
 
+        console.log("RAW GPT OUTPUT", gptResultData);
+
         // format gpt result data to use in components
 
-        const gptResultDataFormatted: Recommendations[] = [];
+        const gptRecsFormatted: Recommendations[] = [];
 
-        gptResultData.active_reset.forEach((e: string) => { gptResultDataFormatted.push({ user: user.id || 0, day: day.id || 0, category: 1,  recommendation: e}) });
-        gptResultData.food.forEach((e: string) => { gptResultDataFormatted.push({ user: user.id || 0, day: day.id || 0, category: 2,  recommendation: e}) });
-        gptResultData.music.forEach((e: string) => { gptResultDataFormatted.push({ user: user.id || 0, day: day.id || 0, category: 3,  recommendation: e}) });
-        gptResultData.passive_rest.forEach((e: string) => { gptResultDataFormatted.push({ user: user.id || 0, day: day.id || 0, category: 4,  recommendation: e}) });
-        gptResultData.productivity.forEach((e: string) => { gptResultDataFormatted.push({ user: user.id || 0, day: day.id || 0, category: 5,  recommendation: e}) });
+        gptResultData.active_reset.forEach((e: string) => { gptRecsFormatted.push({ user: user.id || 0, day: day.id || 0, category: 1,  recommendation: e}) });
+        gptResultData.food.forEach((e: string) => { gptRecsFormatted.push({ user: user.id || 0, day: day.id || 0, category: 2,  recommendation: e}) });
+        gptResultData.music.forEach((e: string) => { gptRecsFormatted.push({ user: user.id || 0, day: day.id || 0, category: 3,  recommendation: e}) });
+        gptResultData.passive_rest.forEach((e: string) => { gptRecsFormatted.push({ user: user.id || 0, day: day.id || 0, category: 4,  recommendation: e}) });
+        gptResultData.productivity.forEach((e: string) => { gptRecsFormatted.push({ user: user.id || 0, day: day.id || 0, category: 5,  recommendation: e}) });
+        
+        const gptDailyScore: WellnessScores = {
+            user: user.id || 0,
+            day: day.id || 0,
+            wellness_score: Number(gptResultData.daily_score)
+        };
 
-        const resultRecommendations: Recommendations[] = await postRecommendationArray(gptResultDataFormatted);
-    
-        onSuccess(resultInputs, resultNote, resultRecommendations);
+        const gptDailyQuote: DailyQuotes = {
+            user: user.id || 0,
+            day: day.id || 0,
+            daily_quote: gptResultData.daily_quote
+        };
+
+        // post data to db
+        const resultRecommendations: Recommendations[] = await postRecommendationArray(gptRecsFormatted);
+        const resultQuote: DailyQuotes = await postDailyQuote(gptDailyQuote);
+        const resultScore: WellnessScores = await postWellnessScores(gptDailyScore);
+            
+        setSubmitting(false);
+        onSuccess(resultInputs, resultNote, resultRecommendations, resultQuote, resultScore);
     }
 
     return (
