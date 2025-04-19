@@ -4,21 +4,53 @@ import NewUserForm from "./components/NewUserForm";
 import Greeting from "./components/Greeting";
 import { Users } from "@/interfaces/Users";
 import DailyForm from "./components/DailyForm";
+import { WellnessInputs } from "@/interfaces/WellnessInputs";
+import { WellnessNotes } from "@/interfaces/WellnessNotes";
+import { Days } from "@/interfaces/Days";
+import { getDays, postDays } from "@/api/days_api";
 
 export default function Daily() {
     const [getStartedClicked, setGetStartedClicked] = useState(false);
     const [userExists, setUserExists] = useState<boolean>();
     const [user, setUser] = useState<Users>();
+    const [newDay, setNewDay] = useState<boolean>();
+    const [today, setToday] = useState<Days>();
+    const [wellnessInputs, setWellnessInputs] = useState<WellnessInputs[]>([]);
+    const [wellnessNote, setWellnessNote] = useState<WellnessNotes>();
 
     useEffect(() => {
         async function fetchData() {
             const result = await getUser();
+            const days = await getDays();
+
             if (result?.id) {
                 console.log(result);
                 setUserExists(true);
                 setUser(result);
             }
             else setUserExists(false);
+
+            const today = new Date();
+            const todayDb = days.find(d => {
+                const date = new Date(d.date_field);
+                console.log(date.getFullYear(), date.getMonth() + 1, date.getDate() + 1);
+                console.log(today.getFullYear(), today.getMonth(), today.getDate());
+                return (date.getFullYear() == today.getFullYear()) && (date.getMonth() + 1 == today.getMonth()) && (date.getDate() + 1 == today.getDate());
+            });
+
+            if (todayDb) {
+                setNewDay(true);
+                setToday(todayDb);
+            }
+            else {
+                setNewDay(false);
+                const today = new Date();
+                const day: Days = {
+                    date_field: `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`
+                };
+                const resultDays = await postDays(day);
+                setToday(resultDays);
+            }
         }
 
         fetchData();
@@ -29,10 +61,19 @@ export default function Daily() {
         setUser(user);
     }
 
+    function onSuccessDailySubmit(resultInputs: WellnessInputs[], resultNote: WellnessNotes) {
+        console.log("RESULT INPUTS FRONTEND", resultInputs);
+        setWellnessInputs(resultInputs);
+        setWellnessNote(resultNote);
+        setNewDay(true);
+    }
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
             <div className="w-full max-w-2xl space-y-6">
                 <h1 className="text-3xl font-bold text-center mb-4">Check-In Buddy</h1>
+
+                <h2>Today: {today?.date_field}</h2>
 
                 {!userExists &&
                     <div className="bg-white shadow-md rounded-2xl p-6">
@@ -40,9 +81,14 @@ export default function Daily() {
                     </div>
                 }
 
-                {user ?
+                {(user && today) ?
+                    newDay ? 
                     <div className="bg-white shadow-md rounded-2xl p-6">
-                        <DailyForm user={user} />
+                        New Day
+                    </div>
+                    :
+                    <div className="bg-white shadow-md rounded-2xl p-6">
+                        <DailyForm userId={user.id || 0} dayId={today.id || 0} onSuccess={onSuccessDailySubmit} />
                     </div>
                     :
                     getStartedClicked ?

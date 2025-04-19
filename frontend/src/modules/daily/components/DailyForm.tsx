@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -19,13 +18,22 @@ import {
     RadioGroupItem,
 } from "@/components/ui/radio-group"
 import { Textarea } from "@/components/ui/textarea"
-import { Users } from "@/interfaces/Users";
+
+import { WellnessInputs } from "@/interfaces/WellnessInputs";
+import { WellnessNotes } from "@/interfaces/WellnessNotes";
+import { Days } from "@/interfaces/Days";
+
+import { postWellnessInputs } from "@/api/wellness_inputs_api";
+import { postWellnessNotes } from "@/api/wellness_notes_api";
 
 import SvgSaddest from '@/svgs/1.svg?react';
 import SvgSad from '@/svgs/2.svg?react';
 import SvgNeutral from '@/svgs/3.svg?react'
 import SvgHappy from '@/svgs/4.svg?react';
 import SvgHappiest from '@/svgs/5.svg?react'
+import { postDays } from "@/api/days_api";
+
+
 
 const svgs = [SvgSaddest, SvgSad, SvgNeutral, SvgHappy, SvgHappiest];
 
@@ -75,7 +83,7 @@ const svgColors = {
     select: "#A7C7E7"
 };
 
-export default function DailyForm({ user }: { user: Users }) {
+export default function DailyForm({ userId, dayId, onSuccess }: { userId: number, dayId: number, onSuccess: (resultInputs: WellnessInputs[], resultNote: WellnessNotes) => void }) {
     const [submitting, setSubmitting] = useState<boolean>(false);
 
     const [selectedSvg, setSelectedSvg] = useState({
@@ -97,9 +105,54 @@ export default function DailyForm({ user }: { user: Users }) {
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        // 1. save data to db
+        const mood: WellnessInputs = {
+            user: userId,
+            day: dayId,
+            category: 1,
+            score: Number(values.mood)
+        };
+        const energy: WellnessInputs = {
+            user: userId,
+            day: dayId,
+            category: 2,
+            score: Number(values.energy)
+        };
+        const socialBattery: WellnessInputs = {
+            user: userId,
+            day: dayId,
+            category: 3,
+            score: Number(values.socialBattery)
+        };
+        const apetite: WellnessInputs = {
+            user: userId,
+            day: dayId,
+            category: 4,
+            score: Number(values.apetite)
+        };
+
+        const note: WellnessNotes = {
+            user: userId,
+            day: dayId,
+            note: values.note
+        };
+
+        setSubmitting(true);
+
+        const moodResult = await postWellnessInputs(mood);
+        const energyResult = await postWellnessInputs(energy);
+        const socialBatteryResult = await postWellnessInputs(socialBattery);
+        const apetiteResult = await postWellnessInputs(apetite);
+        const resultInputs: WellnessInputs[] = [moodResult, energyResult, socialBatteryResult, apetiteResult];
+
+        const resultNote = await postWellnessNotes(note);
+        
+        
+
+        setSubmitting(false);
+
         // 2. pass data to gpt
-        console.log(values);
+    
+        onSuccess(resultInputs, resultNote);
     }
 
     return (

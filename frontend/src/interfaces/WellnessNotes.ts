@@ -1,6 +1,6 @@
 export interface WellnessNotes {
     id?: number;
-    user_id: number;
-    day_id: number;
+    user: number;
+    day: number;
     note: string;
 }

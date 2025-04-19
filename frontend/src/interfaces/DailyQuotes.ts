@@ -1,6 +1,6 @@
 export interface DailyQuotes {
     id?: number;
-    user_id: number;
-    day_id: number;
+    user: number;
+    day: number;
     daily_quote: string;
 }
