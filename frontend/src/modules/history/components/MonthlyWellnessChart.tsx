@@ -10,11 +10,12 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-// Define the shape of your API data
+
 interface MonthlyScore {
-  month: string;         // example: "2025-04"
-  average_score: number; // example: 78
+  month: string;         
+  average_score: number; 
 }
+
 
 const MonthlyWellnessChart: React.FC = () => {
   const [data, setData] = useState<MonthlyScore[]>([]);
@@ -39,6 +40,7 @@ const MonthlyWellnessChart: React.FC = () => {
     };
 
     fetchMonthlyScores();
+    
   }, []);
 
   if (loading) {
@@ -86,7 +88,7 @@ const MonthlyWellnessChart: React.FC = () => {
           <CartesianGrid stroke="#ddd" strokeDasharray="3 3" />
           <XAxis
             dataKey="month"
-            //tickFormatter={formatMonth}
+            
             tick={{ fill: "#666", fontSize: 12 }}
             axisLine={{ stroke: "#999" }}
             tickLine={{ stroke: "#999" }}
