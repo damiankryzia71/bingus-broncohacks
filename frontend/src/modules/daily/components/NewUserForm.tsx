@@ -14,9 +14,10 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+
 import { postUsers } from "@/api/users_api";
 import { Users } from "@/interfaces/Users";
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
     name: z.string().min(1, {
@@ -61,7 +62,11 @@ export default function NewUserForm({ onSuccess }: { onSuccess: (user: Users) =>
         };
 
         setSubmitting(true);
+
         const newUser = await postUsers(user);
+        
+        // PASS DATA TO GPT
+
         setSubmitting(false);
 
         onSuccess(newUser);
@@ -78,7 +83,7 @@ export default function NewUserForm({ onSuccess }: { onSuccess: (user: Users) =>
                         <FormItem>
                             <FormLabel>What's your name?</FormLabel>
                             <FormControl>
-                                <Input placeholder="Your name" {...field} />
+                                <Textarea placeholder="Your name" {...field} />
                             </FormControl>
                             <FormDescription>
                                 This is how I will refer to you going forward.
@@ -95,7 +100,7 @@ export default function NewUserForm({ onSuccess }: { onSuccess: (user: Users) =>
                         <FormItem>
                             <FormLabel>What is your college major?</FormLabel>
                             <FormControl>
-                                <Input placeholder="e.g. Computer Science" {...field} />
+                                <Textarea placeholder="e.g. Computer Science" {...field} />
                             </FormControl>
                             <FormDescription>
                                 Tell me what you're studying!
@@ -112,7 +117,7 @@ export default function NewUserForm({ onSuccess }: { onSuccess: (user: Users) =>
                         <FormItem>
                             <FormLabel>What is your college year?</FormLabel>
                             <FormControl>
-                                <Input placeholder="e.g. Sophomore, Fourth, etc." {...field} />
+                                <Textarea placeholder="e.g. Sophomore, Fourth, etc." {...field} />
                             </FormControl>
                             <FormDescription>
                                 Helps me understand where you are in your journey.
@@ -129,7 +134,7 @@ export default function NewUserForm({ onSuccess }: { onSuccess: (user: Users) =>
                         <FormItem>
                             <FormLabel>What is your age?</FormLabel>
                             <FormControl>
-                                <Input placeholder="Your age" {...field} />
+                                <Textarea placeholder="Your age" {...field} />
                             </FormControl>
                             <FormDescription>
                                 Just for context — no judgment!
@@ -146,7 +151,7 @@ export default function NewUserForm({ onSuccess }: { onSuccess: (user: Users) =>
                         <FormItem>
                             <FormLabel>What is your gender?</FormLabel>
                             <FormControl>
-                                <Input placeholder="Your gender" {...field} />
+                                <Textarea placeholder="Your gender" {...field} />
                             </FormControl>
                             <FormDescription>
                                 Share what you're comfortable with.
@@ -163,7 +168,7 @@ export default function NewUserForm({ onSuccess }: { onSuccess: (user: Users) =>
                         <FormItem>
                             <FormLabel>What are some of your hobbies?</FormLabel>
                             <FormControl>
-                                <Input placeholder="e.g. Reading, gaming, climbing" {...field} />
+                                <Textarea placeholder="e.g. Reading, gaming, climbing" {...field} />
                             </FormControl>
                             <FormDescription>
                                 This helps me personalize your check-ins.
@@ -180,7 +185,7 @@ export default function NewUserForm({ onSuccess }: { onSuccess: (user: Users) =>
                         <FormItem>
                             <FormLabel>What are some of your comfort foods?</FormLabel>
                             <FormControl>
-                                <Input placeholder="e.g. Pizza, sushi, mac & cheese" {...field} />
+                                <Textarea placeholder="e.g. Pizza, sushi, mac & cheese" {...field} />
                             </FormControl>
                             <FormDescription>
                                 Good vibes only 🍕🍣
@@ -197,7 +202,7 @@ export default function NewUserForm({ onSuccess }: { onSuccess: (user: Users) =>
                         <FormItem>
                             <FormLabel>What is your music taste like?</FormLabel>
                             <FormControl>
-                                <Input placeholder="e.g. Indie, jazz, classic rock" {...field} />
+                                <Textarea placeholder="e.g. Indie, jazz, classic rock" {...field} />
                             </FormControl>
                             <FormDescription>
                                 I’d love to know what you’re vibing to 🎵
