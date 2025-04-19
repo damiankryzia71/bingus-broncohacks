@@ -3,3 +3,5 @@ Lib
 Scripts
 include
 pyvenv.cfg
+bingus/__pycache__
+app/__pycache__
