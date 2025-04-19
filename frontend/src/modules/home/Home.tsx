@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import Linegraph from "@/components/ui/Linegraph";
+import { Card } from "@/components/ui/card";
+
 
 export default function Home() {
     const [text, setText] = useState<string>("");
@@ -17,7 +18,6 @@ export default function Home() {
     return (
         <div>
             <h1>Home Page</h1>
-            <Linegraph />
             <div>API RESULT: {text}</div>
         </div>
     );
