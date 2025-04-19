@@ -1,24 +1,18 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 from app.openai_service import get_wellness_suggestions
 
 def index(request):
     return HttpResponse("Hello Bingus")
 
-# def ask_openai_view(request):
-    # 1. Hardcoded question
-    # question = "Hello, how are you?"
-
-    # 2. Call your OpenAI service
-    # answer = ask_openai(question)
-
-    # 3. Return the answer as JSON
-    # return JsonResponse({'question': question, 'answer': answer})
-
+@csrf_exempt
 # API to get the wellness suggestions
 def wellness_suggestions_api(request):
+    print(request.method)
     if request.method == "POST":
         try:
             data = json.loads(request.body)

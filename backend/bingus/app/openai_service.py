@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 
-#client = OpenAI(api_key="")  
+client = OpenAI(api_key=api_key)
 
 def get_wellness_suggestions(user_profile, daily_input):
     system_prompt = (
@@ -43,17 +43,3 @@ Return your response in the following JSON format:
     )
 
     return json.loads(response.choices[0].message.content)
-
-'''
-load_dotenv()
-#client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-def ask_openai(question):
-    response = client.chat.completions.create(
-        model="gpt-4",
-        messages=[
-            {"role": "user", "content": question}
-        ]
-    )
-    return response.choices[0].message.content
-
-'''
