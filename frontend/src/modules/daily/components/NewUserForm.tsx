@@ -64,8 +64,6 @@ export default function NewUserForm({ onSuccess }: { onSuccess: (user: Users) =>
         setSubmitting(true);
 
         const newUser = await postUsers(user);
-        
-        // PASS DATA TO GPT
 
         setSubmitting(false);
 

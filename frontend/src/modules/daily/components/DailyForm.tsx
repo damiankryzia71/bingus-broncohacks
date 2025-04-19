@@ -31,8 +31,10 @@ import SvgSad from '@/svgs/2.svg?react';
 import SvgNeutral from '@/svgs/3.svg?react'
 import SvgHappy from '@/svgs/4.svg?react';
 import SvgHappiest from '@/svgs/5.svg?react'
-import { postDays } from "@/api/days_api";
+
 import { Users } from "@/interfaces/Users";
+import { Recommendations } from "@/interfaces/Recommendations";
+import { postRecommendationArray } from "@/api/recommendations_api";
 
 
 
@@ -84,7 +86,7 @@ const svgColors = {
     select: "#A7C7E7"
 };
 
-export default function DailyForm({ user, day, onSuccess }: { user: Users, day: Days, onSuccess: (resultInputs: WellnessInputs[], resultNote: WellnessNotes) => void }) {
+export default function DailyForm({ user, day, onSuccess }: { user: Users, day: Days, onSuccess: (resultInputs: WellnessInputs[], resultNote: WellnessNotes, resultRecommendations: Recommendations[]) => void }) {
     const [submitting, setSubmitting] = useState<boolean>(false);
 
     const [selectedSvg, setSelectedSvg] = useState({
@@ -146,14 +148,71 @@ export default function DailyForm({ user, day, onSuccess }: { user: Users, day: 
         const resultInputs: WellnessInputs[] = [moodResult, energyResult, socialBatteryResult, apetiteResult];
 
         const resultNote = await postWellnessNotes(note);
-        
-        
 
         setSubmitting(false);
 
-        // 2. pass data to gpt
+        // pass data to gpt
+        const gptInput = {
+            user_profile: {
+                name: user.name,
+                preferences: [user.hobbies, user.music_taste, user.comfort_foods]
+            },
+            daily_input: {
+                mood: {
+                    "1": "angry",
+                    "2": "anxious",
+                    "3": "sad",
+                    "4": "neutral",
+                    "5": "happy"
+                }[mood.score],
+                energy_level: {
+                    "1": "exhausted",
+                    "2": "tired",
+                    "3": "normal",
+                    "4": "alert",
+                    "5": "energized"
+                }[energy.score],
+                social_battery: {
+                    "1": "drained",
+                    "2": "low",
+                    "3": "okay",
+                    "4": "charged",
+                    "5": "full"
+                }[socialBattery.score],
+                apetite: {
+                    "1": "no apetite",
+                    "2": "not hungry",
+                    "3": "normal",
+                    "4": "hungry",
+                    "5": "very hungry"
+                }[apetite.score],
+                additional_note: note.note
+            }
+        };
+
+        const gptResult = await fetch("http://localhost:8000/app/api/wellness/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(gptInput)
+        });
+
+        const gptResultData = await gptResult.json();
+
+        // format gpt result data to use in components
+
+        const gptResultDataFormatted: Recommendations[] = [];
+
+        gptResultData.active_reset.forEach((e: string) => { gptResultDataFormatted.push({ user: user.id || 0, day: day.id || 0, category: 1,  recommendation: e}) });
+        gptResultData.food.forEach((e: string) => { gptResultDataFormatted.push({ user: user.id || 0, day: day.id || 0, category: 2,  recommendation: e}) });
+        gptResultData.music.forEach((e: string) => { gptResultDataFormatted.push({ user: user.id || 0, day: day.id || 0, category: 3,  recommendation: e}) });
+        gptResultData.passive_rest.forEach((e: string) => { gptResultDataFormatted.push({ user: user.id || 0, day: day.id || 0, category: 4,  recommendation: e}) });
+        gptResultData.productivity.forEach((e: string) => { gptResultDataFormatted.push({ user: user.id || 0, day: day.id || 0, category: 5,  recommendation: e}) });
+
+        const resultRecommendations: Recommendations[] = await postRecommendationArray(gptResultDataFormatted);
     
-        onSuccess(resultInputs, resultNote);
+        onSuccess(resultInputs, resultNote, resultRecommendations);
     }
 
     return (

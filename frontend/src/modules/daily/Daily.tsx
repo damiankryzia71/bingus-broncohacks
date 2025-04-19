@@ -8,6 +8,15 @@ import { WellnessInputs } from "@/interfaces/WellnessInputs";
 import { WellnessNotes } from "@/interfaces/WellnessNotes";
 import { Days } from "@/interfaces/Days";
 import { getDays, postDays } from "@/api/days_api";
+import { Recommendations } from "@/interfaces/Recommendations";
+
+const recommendationCategories = {
+    "1": "Active Rest",
+    "2": "Food",
+    "3": "Music",
+    "4": "Passive Rest",
+    "5": "Productivity"
+};
 
 export default function Daily() {
     const [getStartedClicked, setGetStartedClicked] = useState(false);
@@ -17,6 +26,7 @@ export default function Daily() {
     const [today, setToday] = useState<Days>();
     const [wellnessInputs, setWellnessInputs] = useState<WellnessInputs[]>([]);
     const [wellnessNote, setWellnessNote] = useState<WellnessNotes>();
+    const [recommendations, setRecommendations] = useState<Recommendations[]>();
 
     useEffect(() => {
         async function fetchData() {
@@ -61,11 +71,14 @@ export default function Daily() {
         setUser(user);
     }
 
-    function onSuccessDailySubmit(resultInputs: WellnessInputs[], resultNote: WellnessNotes) {
+    function onSuccessDailySubmit(resultInputs: WellnessInputs[], resultNote: WellnessNotes, resultRecommendations: Recommendations[]) {
         console.log("RESULT INPUTS FRONTEND", resultInputs);
         setWellnessInputs(resultInputs);
         setWellnessNote(resultNote);
+        setRecommendations(resultRecommendations);
         setNewDay(true);
+
+        console.log("GPT RECS", resultRecommendations);
     }
 
     return (
