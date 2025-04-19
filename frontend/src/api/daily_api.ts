@@ -1,14 +1,15 @@
+import { Users } from "@/interfaces/Users";
+
 const api: string = "http://localhost:8000/app";
 
-const userId: number = 3; // assume user is always logged in for this app
-
 export async function getUser() {
-        const result = await fetch(`${api}/users/${userId}`);
-        const user = await result.json();
+        const result = await fetch(`${api}/users/`);
+        const users = await result.json();
+        const user = users[0];
         return user;
 }
 
-export async function postUsers(user: any) {
+export async function postUsers(user: Users) {
     const result = await fetch(`${api}/users/`, {
         method: "POST",
         headers: {

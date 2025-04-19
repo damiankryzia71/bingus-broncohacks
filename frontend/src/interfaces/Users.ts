@@ -1,9 +1,9 @@
 export interface Users {
-    id?: string;
+    id?: number;
     name: string;
     college_major: string;
     college_year: string;
-    age: string;
+    age: number;
     gender: string;
     hobbies: string;
     comfort_foods: string;

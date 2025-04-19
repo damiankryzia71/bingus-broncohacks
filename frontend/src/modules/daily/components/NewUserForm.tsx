@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { postUsers } from "@/api/daily_api";
-import { Users } from "@/interfaces/users";
+import { Users } from "@/interfaces/Users";
 
 const formSchema = z.object({
     name: z.string().min(1, {
@@ -53,7 +53,7 @@ export default function NewUserForm({ onSuccess }: { onSuccess: (user: Users) =>
             name: values.name,
             college_major: values.collegeMajor,
             college_year: values.collegeYear,
-            age: values.age,
+            age: Number(values.age),
             gender: values.gender,
             hobbies: values.hobbies,
             comfort_foods: values.comfortFoods,
