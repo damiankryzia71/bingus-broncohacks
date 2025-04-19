@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function Home() {
+export default function Daily() {
     const [text, setText] = useState<string>("");
 
     useEffect(() => {
